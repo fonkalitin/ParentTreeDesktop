@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+ <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings></PropertyGroup>
+ <ItemGroup>
+  <Compile Include="../../desktop/LocalDocument.cs" Link="LocalDocument.cs" />
+  <Compile Include="../../desktop/OfflineWeb.cs" Link="OfflineWeb.cs" />
+  <EmbeddedResource Include="../../desktop/OfflineWeb.zip" LogicalName="ParentTree.Desktop.OfflineWeb.zip" />
+ </ItemGroup>
+</Project>

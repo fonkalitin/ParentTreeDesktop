@@ -1,0 +1,211 @@
+{
+  "version": "1.0",
+  "metadata": {
+    "title": "Семья Ивановых — демонстрация",
+    "createdAt": "2026-11-20T00:00:00.000Z",
+    "updatedAt": "2026-11-20T00:00:00.000Z",
+    "layoutMode": "manual",
+    "placedIds": [
+      "g1",
+      "g2",
+      "g3",
+      "g4",
+      "p1",
+      "p2",
+      "c1",
+      "c2"
+    ]
+  },
+  "nodes": [
+    {
+      "id": "g1",
+      "type": "person",
+      "position": {
+        "x": 100,
+        "y": 30
+      },
+      "data": {
+        "label": "Иван Петрович Иванов",
+        "gender": "M",
+        "birth": "1950",
+        "notes": "Вымышленный персонаж. Демонстрационные данные.",
+        "attachments": []
+      }
+    },
+    {
+      "id": "g2",
+      "type": "person",
+      "position": {
+        "x": 350,
+        "y": 30
+      },
+      "data": {
+        "label": "Мария Сергеевна Иванова",
+        "gender": "F",
+        "birth": "1953",
+        "notes": "Вымышленный персонаж. Демонстрационные данные.",
+        "attachments": []
+      }
+    },
+    {
+      "id": "g3",
+      "type": "person",
+      "position": {
+        "x": 700,
+        "y": 30
+      },
+      "data": {
+        "label": "Николай Андреевич Петров",
+        "gender": "M",
+        "birth": "1952",
+        "notes": "Вымышленный персонаж. Демонстрационные данные.",
+        "attachments": []
+      }
+    },
+    {
+      "id": "g4",
+      "type": "person",
+      "position": {
+        "x": 950,
+        "y": 30
+      },
+      "data": {
+        "label": "Анна Васильевна Петрова",
+        "gender": "F",
+        "birth": "1955",
+        "notes": "Вымышленный персонаж. Демонстрационные данные.",
+        "attachments": []
+      }
+    },
+    {
+      "id": "p1",
+      "type": "person",
+      "position": {
+        "x": 300,
+        "y": 300
+      },
+      "data": {
+        "label": "Александр Иванович Иванов",
+        "gender": "M",
+        "birth": "1980",
+        "notes": "Вымышленный персонаж. Демонстрационные данные.",
+        "attachments": []
+      }
+    },
+    {
+      "id": "p2",
+      "type": "person",
+      "position": {
+        "x": 700,
+        "y": 300
+      },
+      "data": {
+        "label": "Елена Николаевна Иванова",
+        "gender": "F",
+        "birth": "1982",
+        "notes": "Вымышленный персонаж. Демонстрационные данные.",
+        "attachments": []
+      }
+    },
+    {
+      "id": "c1",
+      "type": "person",
+      "position": {
+        "x": 300,
+        "y": 570
+      },
+      "data": {
+        "label": "Дмитрий Александрович Иванов",
+        "gender": "M",
+        "birth": "2010",
+        "notes": "Вымышленный персонаж. Демонстрационные данные.",
+        "attachments": []
+      }
+    },
+    {
+      "id": "c2",
+      "type": "person",
+      "position": {
+        "x": 700,
+        "y": 570
+      },
+      "data": {
+        "label": "Софья Александровна Иванова",
+        "gender": "F",
+        "birth": "2014",
+        "notes": "Вымышленный персонаж. Демонстрационные данные.",
+        "attachments": []
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "s-g1",
+      "type": "spouse",
+      "source": "g1",
+      "target": "g2"
+    },
+    {
+      "id": "s-g3",
+      "type": "spouse",
+      "source": "g3",
+      "target": "g4"
+    },
+    {
+      "id": "s-p1",
+      "type": "spouse",
+      "source": "p1",
+      "target": "p2"
+    },
+    {
+      "id": "g1-p1",
+      "type": "parent",
+      "source": "g1",
+      "target": "p1"
+    },
+    {
+      "id": "g2-p1",
+      "type": "parent",
+      "source": "g2",
+      "target": "p1"
+    },
+    {
+      "id": "g3-p2",
+      "type": "parent",
+      "source": "g3",
+      "target": "p2"
+    },
+    {
+      "id": "g4-p2",
+      "type": "parent",
+      "source": "g4",
+      "target": "p2"
+    },
+    {
+      "id": "p1-c1",
+      "type": "parent",
+      "source": "p1",
+      "target": "c1"
+    },
+    {
+      "id": "p2-c1",
+      "type": "parent",
+      "source": "p2",
+      "target": "c1"
+    },
+    {
+      "id": "p1-c2",
+      "type": "parent",
+      "source": "p1",
+      "target": "c2"
+    },
+    {
+      "id": "p2-c2",
+      "type": "parent",
+      "source": "p2",
+      "target": "c2"
+    }
+  ],
+  "clusters": [],
+  "phantoms": []
+}

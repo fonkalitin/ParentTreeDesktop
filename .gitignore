@@ -1,0 +1,17 @@
+**/node_modules/
+**/bin/
+**/obj/
+/web/dist/
+/desktop/OfflineWeb.zip
+/dist/
+/ParentTreeData/
+**/ParentTreeData/
+.env
+.env.*
+*.log
+*.pdb
+*.zip
+*.exe
+*.cab
+.DS_Store
+Thumbs.db

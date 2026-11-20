@@ -1,0 +1,10 @@
+{
+  "name": "@napi-rs/wasm-runtime",
+  "version": "1.2.2",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/napi-rs/napi-rs.git",
+    "directory": "wasm-runtime"
+  }
+}

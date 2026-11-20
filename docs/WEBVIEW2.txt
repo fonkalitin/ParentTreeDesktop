@@ -1,0 +1,12 @@
+Microsoft Edge WebView2 Runtime — Windows x64
+
+Если ParentTree сообщает об отсутствии WebView2, распакуйте этот архив и запустите
+MicrosoftEdgeWebView2RuntimeInstallerX64.exe. После установки снова откройте ParentTree.
+
+Это автономный установщик Microsoft, а не загрузчик. Интернет для установки не нужен.
+Установщик полезен для Windows 10 и систем, где WebView2 отсутствует. При наличии WebView2 он не нужен.
+ParentTree сам установщик не запускает и не изменяет настройки Windows.
+
+Официальная ссылка x64: https://go.microsoft.com/fwlink/?linkid=2124701
+Документация: https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/distribution
+Компонент лицензируется Microsoft отдельно от ParentTree.

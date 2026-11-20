@@ -1,0 +1,47 @@
+name: Build and verify
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Install UI dependencies
+        run: npm --prefix web ci
+      - name: Unit tests
+        run: npm --prefix web test
+      - name: Dependency audit
+        run: npm --prefix web audit --audit-level=high
+      - name: Build desktop
+        shell: pwsh
+        run: ./build.ps1
+      - name: Native file tests
+        run: dotnet run --project tests/FileTests -c Release
+      - name: Native window tests
+        run: dotnet run --project tests/WindowTests -c Release
+      - name: Verify source and package boundaries
+        run: python tools/check_release.py --dist dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ParentTree-Windows-x64
+          path: |
+            dist/ParentTreeDesktop.exe
+            dist/Демонстрационное древо.fam
+            dist/README.txt
+            dist/LICENSE
+            dist/THIRD_PARTY_NOTICES.md
+            dist/licenses/**

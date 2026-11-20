@@ -1,0 +1,402 @@
+@import 'tailwindcss';
+@import '@xyflow/react/dist/style.css';
+
+:root {
+  color-scheme: dark;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  --pt-bg: #0f1419;
+  --pt-bg-elevated: #171d25;
+  --pt-panel: #1c2430;
+  --pt-border: #2a3444;
+  --pt-male: #4f8fd8;
+  --pt-female: #d47a9c;
+  --pt-card: #1a222d;
+  --pt-card-border: #2e3a4c;
+  --pt-text: #e8eef7;
+  --pt-muted: #93a0b4;
+  --pt-accent: #5b9fd4;
+  /* Kinship lines — distinct at a glance (Famiry-like orthogonal chart on dark UI) */
+  --pt-line-spouse: #e0b84a;
+  --pt-line-parent: #7eb0d4;
+  --pt-line-parent-muted: #5a6f88;
+  --pt-line-sibling: #4db6a0;
+  --pt-line-phantom: #7a8494;
+  /* Card kinship accents */
+  --pt-role-root: #c4a35a;
+  --pt-role-blood: #3d5a73;
+  --pt-role-inlaw: #6b5a7a;
+  --pt-gen-band-0: rgba(196, 163, 90, 0.14);
+  --pt-gen-band-1: rgba(126, 176, 212, 0.1);
+  --pt-gen-band-2: rgba(148, 163, 184, 0.08);
+  --pt-gen-band-3: rgba(167, 139, 188, 0.1);
+  --pt-photo-bg: #121820;
+}
+
+/* Light printable theme applied temporarily during PNG/PDF capture */
+.pt-export-light {
+  --pt-bg: #f7f8fa;
+  --pt-bg-elevated: #ffffff;
+  --pt-panel: #eef1f5;
+  --pt-border: #c5ced9;
+  --pt-male: #2b6cb0;
+  --pt-female: #b04578;
+  --pt-card: #ffffff;
+  --pt-card-border: #b8c2cf;
+  --pt-text: #1a222d;
+  --pt-muted: #5a6578;
+  --pt-accent: #2b6cb0;
+  --pt-line-spouse: #9a7b12;
+  --pt-line-parent: #2f6f9c;
+  --pt-line-parent-muted: #7a8fa3;
+  --pt-line-sibling: #1f8a72;
+  --pt-line-phantom: #8a94a3;
+  --pt-role-root: #8a6d2b;
+  --pt-role-blood: #d6e2ee;
+  --pt-role-inlaw: #e8dff0;
+  --pt-gen-band-0: rgba(138, 109, 43, 0.2);
+  --pt-gen-band-1: rgba(47, 111, 156, 0.14);
+  --pt-gen-band-2: rgba(90, 101, 120, 0.12);
+  --pt-gen-band-3: rgba(120, 100, 140, 0.14);
+  --pt-photo-bg: #e6ebf2;
+}
+
+.pt-export-light .person-card {
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12) !important;
+}
+
+.pt-export-light .react-flow__handle {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.pt-export-light .family-bands-svg .pt-marriage-junction circle:last-child,
+.pt-export-light .family-bands-svg .pt-sibling-junction circle:last-child {
+  filter: none;
+}
+
+.pt-export-light .family-bands-svg .pt-sibling-line,
+.pt-export-light .family-bands-svg .pt-phantom-line {
+  opacity: 0.85;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: radial-gradient(1200px 600px at 50% -10%, #1a2740 0%, var(--pt-bg) 55%);
+  color: var(--pt-text);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button {
+  font: inherit;
+}
+
+.react-flow__minimap {
+  background: var(--pt-panel) !important;
+  border: 1px solid var(--pt-border) !important;
+}
+
+/* FamilyBands draws stored kinship; hide committed RF edges but keep live rubber-band. */
+.react-flow__edge,
+.react-flow__edge-path {
+  display: none !important;
+  opacity: 0 !important;
+  stroke: transparent !important;
+  pointer-events: none;
+}
+
+.react-flow__connection-path {
+  display: block !important;
+  opacity: 1 !important;
+  stroke: var(--pt-accent) !important;
+  stroke-width: 2px !important;
+  fill: none !important;
+}
+
+.react-flow__pane {
+  cursor: grab;
+}
+
+.react-flow__pane.dragging,
+.react-flow__pane:active {
+  cursor: grabbing;
+}
+
+.react-flow__node {
+  cursor: pointer;
+}
+
+/* Person cards above clusters while dragging into a container */
+.react-flow__node-cluster {
+  z-index: 1 !important;
+}
+
+.react-flow__node-person {
+  z-index: 10 !important;
+}
+
+.react-flow__node.selected {
+  z-index: 20 !important;
+}
+
+.react-flow__node.dragging {
+  cursor: grabbing;
+  z-index: 1000 !important;
+}
+
+.react-flow__node .person-card {
+  cursor: pointer;
+}
+
+/* Soft pulsing outer aura; stable bright selection ring (constant frame) */
+@keyframes pt-select-aura {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1.25px color-mix(in srgb, var(--pt-accent) 78%, #dcefff),
+      0 0 5px 1px color-mix(in srgb, var(--pt-accent) 20%, transparent),
+      0 0 10px 2px color-mix(in srgb, var(--pt-line-spouse) 8%, transparent),
+      0 7px 20px rgba(0, 0, 0, 0.42);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1.25px color-mix(in srgb, var(--pt-accent) 78%, #dcefff),
+      0 0 9px 2px color-mix(in srgb, var(--pt-accent) 36%, transparent),
+      0 0 16px 3px color-mix(in srgb, var(--pt-line-spouse) 14%, transparent),
+      0 7px 20px rgba(0, 0, 0, 0.42);
+  }
+}
+
+@keyframes pt-select-aura-cluster {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1.25px color-mix(in srgb, var(--pt-accent) 72%, #dcefff),
+      0 0 5px 1px color-mix(in srgb, var(--pt-accent) 18%, transparent),
+      0 0 11px 2px color-mix(in srgb, var(--pt-line-spouse) 7%, transparent),
+      0 9px 24px rgba(0, 0, 0, 0.47);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1.25px color-mix(in srgb, var(--pt-accent) 72%, #dcefff),
+      0 0 9px 2px color-mix(in srgb, var(--pt-accent) 32%, transparent),
+      0 0 16px 3px color-mix(in srgb, var(--pt-line-spouse) 12%, transparent),
+      0 9px 24px rgba(0, 0, 0, 0.47);
+  }
+}
+
+.person-card--selected {
+  outline: none;
+  animation: pt-select-aura 3.8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+.cluster-card--selected {
+  outline: none;
+  animation: pt-select-aura-cluster 3.8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+.person-card--root:not(.person-card--selected) {
+  box-shadow:
+    0 0 0 1px var(--pt-role-root),
+    0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .person-card--selected,
+  .cluster-card--selected {
+    animation: none;
+    box-shadow:
+      0 0 0 1.25px color-mix(in srgb, var(--pt-accent) 72%, #dcefff),
+      0 0 9px 2px color-mix(in srgb, var(--pt-accent) 34%, transparent),
+      0 0 16px 3px color-mix(in srgb, var(--pt-line-spouse) 12%, transparent),
+      0 6px 18px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.pt-export-light .person-card--selected,
+.pt-export-light .cluster-card--selected {
+  animation: none;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12) !important;
+}
+
+/* Discoverable kinship ports (top/bottom required; sides for spouse) */
+.react-flow__handle.pt-port {
+  pointer-events: all !important;
+  opacity: 1 !important;
+  width: 12px !important;
+  height: 12px !important;
+  border: 2px solid var(--pt-bg) !important;
+  background: var(--pt-accent) !important;
+  border-radius: 999px !important;
+  z-index: 5;
+}
+
+.react-flow__handle.pt-port:hover,
+.react-flow__handle.pt-port:focus {
+  background: #7ec4f0 !important;
+  box-shadow: 0 0 0 3px rgba(91, 159, 212, 0.35);
+}
+
+.react-flow__handle.pt-port--bottom {
+  background: var(--pt-line-parent) !important;
+}
+
+.react-flow__handle.pt-port--top {
+  background: var(--pt-line-parent) !important;
+}
+
+/* Orphan sibling ports — left of top-center; gone once a parent exists */
+.react-flow__handle.pt-port--sibling {
+  width: 11px !important;
+  height: 11px !important;
+  background: var(--pt-line-sibling) !important;
+  box-shadow: 0 0 0 2px rgba(77, 182, 160, 0.25);
+  z-index: 6;
+}
+
+.react-flow__handle.pt-port--sibling:hover,
+.react-flow__handle.pt-port--sibling:focus {
+  background: #6dcdb8 !important;
+  box-shadow: 0 0 0 3px rgba(77, 182, 160, 0.4);
+}
+
+.react-flow__handle.pt-port--side {
+  width: 10px !important;
+  height: 10px !important;
+  background: var(--pt-line-spouse) !important;
+}
+
+.react-flow__handle.pt-port--phantom {
+  width: 9px !important;
+  height: 9px !important;
+  background: var(--pt-line-phantom) !important;
+  border: 1.5px dashed #a8b0be !important;
+  opacity: 0.85 !important;
+}
+
+.react-flow__handle.pt-port--phantom:hover,
+.react-flow__handle.pt-port--phantom:focus {
+  background: #9aa3b2 !important;
+  box-shadow: 0 0 0 3px rgba(122, 132, 148, 0.35);
+}
+
+.cluster-card {
+  min-height: 44px;
+}
+
+.react-flow__attribution {
+  display: none !important;
+}
+
+/* Marriage links: thin gold port-to-port lines (scale with zoom like parent lines) */
+.family-bands-svg {
+  z-index: 3;
+}
+
+.family-bands-svg .pt-spouse-bar {
+  stroke: var(--pt-line-spouse) !important;
+  stroke-width: 1.75px !important;
+}
+
+.family-bands-svg .pt-parent-line {
+  stroke: var(--pt-line-parent) !important;
+}
+
+.family-bands-svg .pt-sibling-line {
+  stroke: var(--pt-line-sibling) !important;
+  stroke-width: 1.25px !important;
+  stroke-dasharray: 5 4;
+  opacity: 0.55;
+}
+
+.family-bands-svg .pt-phantom-line {
+  stroke: var(--pt-line-phantom) !important;
+  stroke-width: 1.15px !important;
+  stroke-dasharray: 4 5;
+  opacity: 0.55;
+}
+
+.family-bands-svg .pt-phantom-line--selected {
+  stroke: color-mix(in srgb, var(--pt-line-phantom) 55%, #dcefff) !important;
+  stroke-width: 2px !important;
+  opacity: 0.95;
+}
+
+.family-bands-svg .pt-kin-line--selected {
+  stroke-width: 2.35px !important;
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--pt-accent) 55%, transparent));
+  opacity: 1 !important;
+}
+
+.family-bands-svg .pt-spouse-bar.pt-kin-line--selected {
+  stroke: color-mix(in srgb, var(--pt-line-spouse) 55%, #fff4c8) !important;
+}
+
+.family-bands-svg .pt-parent-line.pt-kin-line--selected {
+  stroke: color-mix(in srgb, var(--pt-line-parent) 50%, #dcefff) !important;
+}
+
+.family-bands-svg .pt-sibling-line.pt-kin-line--selected {
+  stroke: color-mix(in srgb, var(--pt-line-sibling) 45%, #d8fff4) !important;
+  stroke-width: 2px !important;
+  opacity: 0.95 !important;
+}
+
+.family-bands-svg .pt-kin-junction--selected {
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--pt-accent) 70%, transparent));
+}
+
+.family-bands-svg .pt-phantom-label {
+  fill: color-mix(in srgb, var(--pt-line-phantom) 70%, #e8eef6);
+  font-size: 10px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-weight: 500;
+  paint-order: stroke;
+  stroke: var(--pt-bg);
+  stroke-width: 3.5px;
+  stroke-linejoin: round;
+  dominant-baseline: auto;
+}
+
+.family-bands-svg .pt-marriage-junction circle:last-child {
+  filter: drop-shadow(0 0 3px rgba(224, 184, 74, 0.55));
+}
+
+.family-bands-svg .pt-sibling-junction circle:last-child {
+  filter: drop-shadow(0 0 3px rgba(77, 182, 160, 0.55));
+}
+
+/* People catalog — century separators between decade shelves */
+.catalog-century {
+  margin-bottom: 0.25rem;
+}
+
+.catalog-century-sep {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.55rem 0.25rem 0.45rem;
+}
+
+.catalog-century-sep__line {
+  flex: 1 1 auto;
+  height: 1px;
+  background: color-mix(in srgb, var(--pt-accent) 45%, var(--pt-border));
+}
+
+.catalog-century-sep__label {
+  flex: 0 0 auto;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pt-accent);
+  white-space: nowrap;
+}
+
